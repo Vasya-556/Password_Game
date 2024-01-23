@@ -1,4 +1,5 @@
 from random import shuffle
+import tkinter as tk
 
 def Generate_Number():
     digits = list(range(10))
@@ -51,19 +52,37 @@ def Correct_Number(guess, answe):
     return res
 
 def Main():
-    answer = Generate_Number()
-    guess = Enter_Number()
-    attempt = 0
-    while Correct_Position(guess, answer) != 4:
-        print(f"Correct Position: {Correct_Position(guess, answer)}")
-        print(f"Correct Number: {Correct_Number(guess, answer)}")
-        print(f"Attempts left {9 - attempt}")
-        guess = Enter_Number()
-        attempt += 1
-        if (attempt > 8):
-            break
+    window = tk.Tk()
+    window.title("Guess password")
+    window.geometry("300x300")
 
-    print('Answer =', answer)
+    text_color = '#1b150b'
+    background_color = '#F9F7F1'
+    primary_color = '#B98E51'
+    secondary_color = '#a5daa3'
+    accent_color = '#77c899'
+    window.configure(bg=background_color)
+
+    Frame = tk.Frame()
+    
+
+    window.mainloop()
+    # answer = Generate_Number()
+    # guess = Enter_Number()
+    # attempt = 0
+    # while Correct_Position(guess, answer) != 4:
+    #     print(f"Correct Position: {Correct_Position(guess, answer)}")
+    #     print(f"Correct Number: {Correct_Number(guess, answer)}")
+    #     print(f"Attempts left {9 - attempt}")
+    #     guess = Enter_Number()
+    #     attempt += 1
+    #     if (attempt > 8):
+    #         print('Answer =', answer)
+    #         print("You lose :(")
+    #         break
+
+    
+    # print("You win :)")
 
 
 if __name__ == "__main__":
