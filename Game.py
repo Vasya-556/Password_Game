@@ -65,9 +65,6 @@ def Main_Window():
     label3 = tk.Label(window, text="correct\nposition")
     label3.place(x=220, y=7)
 
-    label4 = tk.Label(window, text="", fg='#FF0000')
-    label4.place(x=20)
-
     def on_validate(P):
         return len(P) <= 4 and P.isdigit() and len(set(P)) == len(P) or P == ''
 
@@ -78,11 +75,9 @@ def Main_Window():
             entry_text = entry.get()
 
             if len(entry_text) < 4:
-                label4.config(text='Please enter a four digit number with unique digits')
                 return
 
             if len(entry_text) == 4:
-                label4.config(text=' ')
                 if entry_text == answer:
                     window.destroy()
                     EndGame_Window(answer, True)
