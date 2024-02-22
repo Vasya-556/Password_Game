@@ -3,8 +3,7 @@ import tkinter as tk
 from tkinter import messagebox
 
 background_color = '#F9F7F1'
-primary_color = '#B98E51'
-secondary_color = '#a5daa3'
+primary_color = '#a5daa3'
 
 def Generate_Number():
     digits = list(range(9))
@@ -54,6 +53,7 @@ def Main_Window():
     window.geometry("300x300")
 
     answer = Generate_Number()
+    answer = '1234'
 
     window.configure(bg=background_color)
 
@@ -83,10 +83,11 @@ def Main_Window():
                 return
 
             if len(entry_text) == 4:
+                label4.config(text=' ')
                 if entry_text == answer:
                     window.destroy()
                     EndGame_Window(answer, True)
-                label4.config(text='')
+                    return
             
             create_labels(entry_text,y_position)
             entry.delete(0, 'end')
@@ -130,18 +131,29 @@ def Main_Window():
         return res
 
     def create_labels(guess, y_position):
-        entry_label = tk.Label(window, text=guess)
-        entry_label.place(x=30, y=y_position)
+        try:
+            entry_label = tk.Label(window, text=guess)
+            entry_label.place(x=30, y=y_position)
 
-        label_num = tk.Label(window, text=correct_num(guess, answer))
-        label_num.place(x=180, y=y_position)
+            label_num = tk.Label(window, text=correct_num(guess, answer))
+            label_num.place(x=180, y=y_position)
 
-        label_pos = tk.Label(window, text=correct_pos(guess, answer))
-        label_pos.place(x=240, y=y_position)
+            label_pos = tk.Label(window, text=correct_pos(guess, answer))
+            label_pos.place(x=240, y=y_position)
+        except tk.TclError:
+            pass
 
     window.mainloop()
 
 def EndGame_Window(answer, result):
+
+    def open_window(state):
+        window.destroy()
+        if state:
+            Main_Window()
+        else:
+            Start_Window()
+
     res_text = 'You lost :('
     if result:
         res_text = 'You won :)'
@@ -159,10 +171,10 @@ def EndGame_Window(answer, result):
     Res_label = tk.Label(window, text=res_text)
     Res_label.place(x = 95, y= 40)
 
-    Main_Window_button = tk.Button(window, text="Try again", command=Main_Window, bg=secondary_color)
+    Main_Window_button = tk.Button(window, text="Try again", command=lambda: open_window(True), bg=primary_color)
     Main_Window_button.place(x=50, y=100)
 
-    Start_Window_button = tk.Button(window, text="Menu", command=Start_Window, bg=secondary_color)
+    Start_Window_button = tk.Button(window, text="Menu", command=lambda: open_window(False), bg=primary_color)
     Start_Window_button.place(x=160, y=100)
 
     window.mainloop()
