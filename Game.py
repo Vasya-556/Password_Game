@@ -1,69 +1,33 @@
 from random import shuffle
 import tkinter as tk
+from tkinter import messagebox
 
-text_color = '#1b150b'
 background_color = '#F9F7F1'
 primary_color = '#B98E51'
 secondary_color = '#a5daa3'
-accent_color = '#77c899'
 
 def Generate_Number():
-    digits = list(range(10))
+    digits = list(range(9))
     shuffle(digits)
     res = ''.join(map(str, digits[:4]))
     return str(res)
 
-def Enter_Number():
-    isInt = False
-    isFour = False
-    isUnique = False
-    while not isInt or not isFour or not isUnique:
-        try:
-            enter_number = int(input("Enter number: "))
-            isInt = True
-            if len(str(enter_number)) == 4:
-                isFour = True
-                digits = [int(d) for d in str(enter_number)]
-                if len(digits) == len(set(digits)):
-                    isUnique = True
-                else:
-                    print("Invalid input. Please enter a number with unique digits.")
-            else:
-                print("Invalid input. Please enter a 4-digit integer.")
-        except ValueError:
-            print("Invalid input. Please enter an integer.")
-    return str(enter_number)
-
-def Correct_Position(guess, answer):
-    res = 0
-    if(guess[0] == answer[0]):
-        res += 1
-        
-    if(guess[1] == answer[1]):
-        res += 1
-        
-    if(guess[2] == answer[2]):
-        res += 1
-        
-    if(guess[3] == answer[3]):
-        res += 1
-    return res
-
-def Correct_Number(guess, answe):
-    res = 0
-    for i in range(4):
-        for j in range(4):
-            if guess[i] == answe[j]:
-                res += 1
-    return res
-
-def Get_Best_Result():
-    return '?'
-
-def Get_Average_Result():
-    return '?'
-
 def Start_Window():
+
+    def open_main_window():
+        window.destroy()
+
+        Main_Window()
+
+    def show_message_box():
+        messagebox.showinfo("Rules", "Welcome in my game!\n"
+                             "In this game you need to guess my number.\n"
+                             "My number consists of four digits from 1 - 9\n"
+                             "You have 10 attempts.\n"
+                             "After each attempt, you will see the number of correct\n"
+                             "numbers and correct placed numbers.\n"
+                             "Good luck!")
+        
     window = tk.Tk()
     window.title("Guess password")
     window.geometry("300x300")
@@ -74,25 +38,13 @@ def Start_Window():
     Frame.pack(expand=True)
 
     label1 = tk.Label(window, text="Guess my number")
-    label1.place(x=95, y=20, height=20, width=110)
+    label1.place(x=95, y=20)
 
-    label2 = tk.Label(window, text="Best result: " + Get_Best_Result())
-    label2.place(x=50, y=50)
-    
-    label3 = tk.Label(window, text="Average guess: " + Get_Average_Result())
-    label3.place(x=150, y=50)
+    start_button = tk.Button(window, text="Start", command=open_main_window, bg=primary_color)
+    start_button.place(x=130, y=150)
 
-    button1 = tk.Button(window, text="History", command=lambda: print("Button 1 clicked"), bg=secondary_color)
-    button1.place(x=50, y=100)
-
-    button2 = tk.Button(window, text="Clear History", command=lambda: print("Button 2 clicked"), bg=secondary_color)
-    button2.place(x=160, y=100)
-
-    button3 = tk.Button(window, text="Start", command=lambda: print("Button 3 clicked"), bg=primary_color)
-    button3.place(x=100, y=150)
-
-    button4 = tk.Button(window, text="?")
-    button4.place(x=100, y=100)
+    rules_button = tk.Button(window, text="?", command=show_message_box)
+    rules_button.place(x=200, y=15)
 
     window.mainloop()
 
@@ -101,30 +53,91 @@ def Main_Window():
     window.title("Guess password")
     window.geometry("300x300")
 
+    answer = Generate_Number()
+
     window.configure(bg=background_color)
 
     label1 = tk.Label(window, text="Your guess")
-    label1.place(x=30, y=30)
+    label1.place(x=30, y=7)
     
-    label2 = tk.Label(window, text="correct number")
-    label2.place(x=100, y=30)
+    label2 = tk.Label(window, text="correct\nnumber")
+    label2.place(x=160, y=7)
     
-    label3 = tk.Label(window, text="correct position")
-    label3.place(x=190, y=30)
+    label3 = tk.Label(window, text="correct\nposition")
+    label3.place(x=220, y=7)
+
+    label4 = tk.Label(window, text="", fg='#FF0000')
+    label4.place(x=20)
 
     def on_validate(P):
         return len(P) <= 4 and P.isdigit() and len(set(P)) == len(P) or P == ''
-    
+
     validate_cmd = window.register(on_validate)
+    
+    def create_entry(y_position, attempt):
+        def Try_Button(attempt):
+            entry_text = entry.get()
 
-    entry = tk.Entry(window, validate="key", validatecommand=(validate_cmd, '%P'))
-    entry.place(x=50, y=50, width=100, height=20)
+            if len(entry_text) < 4:
+                label4.config(text='Please enter a four digit number with unique digits')
+                return
 
-    label_num = tk.Label(window, text=1)
-    label_num.place(x=155,y=50)
+            if len(entry_text) == 4:
+                if entry_text == answer:
+                    window.destroy()
+                    EndGame_Window(answer, True)
+                label4.config(text='')
+            
+            create_labels(entry_text,y_position)
+            entry.delete(0, 'end')
+            entry.destroy()
+            if attempt <= 9:
+                create_entry(y_position + 23, attempt)
+            else:
+                window.destroy()
+                EndGame_Window(answer, False)
 
-    label_pos = tk.Label(window, text=2)
-    label_pos.place(x=165,y=50)
+        entry = tk.Entry(window, validate="key", validatecommand=(validate_cmd, '%P'))
+        entry.place(x=30, y=y_position, width=125, height=20)
+
+        try_button = tk.Button(window, text='Try', command=lambda: Try_Button(attempt))
+        try_button.place(x=130,y=270)
+        attempt += 1
+    
+    create_entry(40, 0)
+
+    def correct_num(guess, answer):
+        res = 0
+        for i in range(4):
+            for j in range(4):
+                if guess[i] == answer[j]:
+                    res += 1
+        return res
+        
+    def correct_pos(guess, answer):
+        res = 0
+        if(guess[0] == answer[0]):
+            res += 1
+            
+        if(guess[1] == answer[1]):
+            res += 1
+            
+        if(guess[2] == answer[2]):
+            res += 1
+            
+        if(guess[3] == answer[3]):
+            res += 1
+        return res
+
+    def create_labels(guess, y_position):
+        entry_label = tk.Label(window, text=guess)
+        entry_label.place(x=30, y=y_position)
+
+        label_num = tk.Label(window, text=correct_num(guess, answer))
+        label_num.place(x=180, y=y_position)
+
+        label_pos = tk.Label(window, text=correct_pos(guess, answer))
+        label_pos.place(x=240, y=y_position)
 
     window.mainloop()
 
@@ -146,37 +159,16 @@ def EndGame_Window(answer, result):
     Res_label = tk.Label(window, text=res_text)
     Res_label.place(x = 95, y= 40)
 
-    button1 = tk.Button(window, text="Try again", command=lambda: print("Button 1 clicked"), bg=secondary_color)
-    button1.place(x=50, y=100)
+    Main_Window_button = tk.Button(window, text="Try again", command=Main_Window, bg=secondary_color)
+    Main_Window_button.place(x=50, y=100)
 
-    button2 = tk.Button(window, text="Menu", command=lambda: print("Button 2 clicked"), bg=secondary_color)
-    button2.place(x=160, y=100)
+    Start_Window_button = tk.Button(window, text="Menu", command=Start_Window, bg=secondary_color)
+    Start_Window_button.place(x=160, y=100)
 
     window.mainloop()
 
 def Main():
-    # Start_Window()
-    # Main_Window()
-    EndGame_Window(1234, 1)
-
-
-    # answer = Generate_Number()
-    # guess = Enter_Number()
-    # attempt = 0
-    # while Correct_Position(guess, answer) != 4:
-    #     print(f"Correct Position: {Correct_Position(guess, answer)}")
-    #     print(f"Correct Number: {Correct_Number(guess, answer)}")
-    #     print(f"Attempts left {9 - attempt}")
-    #     guess = Enter_Number()
-    #     attempt += 1
-    #     if (attempt > 8):
-    #         print('Answer =', answer)
-    #         print("You lose :(")
-    #         break
-
-    
-    # print("You win :)")
-
+    Start_Window()
 
 if __name__ == "__main__":
     Main()
