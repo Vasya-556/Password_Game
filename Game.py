@@ -53,7 +53,6 @@ def Main_Window():
     window.geometry("300x300")
 
     answer = Generate_Number()
-    answer = '1234'
 
     window.configure(bg=background_color)
 
