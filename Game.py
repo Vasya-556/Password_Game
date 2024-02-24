@@ -173,8 +173,4 @@ def EndGame_Window(answer, result):
 
     window.mainloop()
 
-def Main():
-    Start_Window()
-
-if __name__ == "__main__":
-    Main()
+Start_Window()

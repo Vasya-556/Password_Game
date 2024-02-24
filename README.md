@@ -6,7 +6,7 @@
 This is a simple number guessing game built using Python's Tkinter library. The game generates a random 4-digit number for the player to guess within 10 attempts. After each attempt, the player receives feedback on the number of correct digits and correct placements.
 
 ## Installation
-1. Download the latest release from the [Release Page](link_to_your_release_page).
+1. Download the latest release from the [Release Page](https://github.com/Vasya-556/Password_Game/releases/tag/v1.0.0).
 2. Extract the downloaded zip file.
 3. Navigate to the extracted directory.
 4. Run the executable
