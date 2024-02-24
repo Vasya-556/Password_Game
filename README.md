@@ -9,7 +9,8 @@ This is a simple number guessing game built using Python's Tkinter library. The 
 1. Download the latest release from the [Release Page](https://github.com/Vasya-556/Password_Game/releases/tag/v1.0.0).
 2. Extract the downloaded zip file.
 3. Navigate to the extracted directory.
-4. Run the executable
+4. Turn of antivirus
+5. Run the executable
 
 ## How to Play
 1. Upon running the script, a window titled "Guess password" will appear.
